@@ -102,9 +102,3 @@ if filtro:
         filtro1()
     elif filtro_index == 1:
         filtro2()
-
-
-
-
-
-
