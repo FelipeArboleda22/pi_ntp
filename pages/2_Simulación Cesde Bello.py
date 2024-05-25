@@ -1,13 +1,13 @@
 import streamlit as st
 import pandas as pd
 import plotly.graph_objects as go
-import matplotlib.pyplot as plt
 
 st.set_page_config(layout="wide")
+
 # Set the page title and header
 st.title("Simulador CESDE Bello")
 
-df = pd.read_csv('datasets\cesde.csv')
+df = pd.read_csv('static\datasets\cesde.csv')
 
 gruposU = sorted(df['GRUPO'].unique())
 nivelesU = sorted(df['NIVEL'].unique())
@@ -88,9 +88,29 @@ def filtro2():
         st.subheader(round(conocimiento.mean(),1)) 
   
 # -----------------------------------------------------------------------------------
+def filtro3():
+    grupo = st.selectbox("Grupo", gruposU)
+    grupo_data = df[df['GRUPO'] == grupo]
+    
+    # Grafico de línea para mostrar las notas a lo largo del tiempo
+    fig = go.Figure()
+    for index, row in grupo_data.iterrows():
+        fig.add_trace(go.Scatter(x=gruposU, y=[row['CONOCIMIENTO'], row['DESEMPEÑO'], row['PRODUCTO']],
+                                 mode='lines+markers',
+                                 name=row['NOMBRE']))
+    
+    fig.update_layout(title=f"Notas de Grupo {grupo} a lo largo del tiempo",
+                      xaxis_title='Momento',
+                      yaxis_title='Notas',
+                      legend_title='Estudiante')
+    
+    st.plotly_chart(fig, use_container_width=True)
+
+# -----------------------------------------------------------------------------------
 filtros =[
     "Notas por grupo",
-    "Notas por estudiante"
+    "Notas por estudiante",
+    "Notas por grupo a lo largo del tiempo"
 ]
 
 filtro = st.selectbox("Filtros",filtros)
@@ -102,3 +122,5 @@ if filtro:
         filtro1()
     elif filtro_index == 1:
         filtro2()
+    elif filtro_index == 2:
+        filtro3()
