@@ -21,7 +21,7 @@ momentosU =  sorted(df['MOMENTO'].unique())
 def filtro1():    
     col1, col2 = st.columns(2)
     with col1:
-        grupo = st.selectbox("Grupo",gruposU)
+        grupo = st.selectbox("Grupo",gruposU) 
     with col2:
         momento = st.selectbox("Momento",momentosU)
     resultado = df[(df['GRUPO']==grupo)&(df['MOMENTO']==momento)]
