@@ -100,7 +100,7 @@ def filtro3():
                                  name=row['NOMBRE']))
     
     fig.update_layout(title=f"Notas de Grupo {grupo} a lo largo del tiempo",
-                      xaxis_title='Momento',s
+                      xaxis_title='Momento',
                       yaxis_title='Notas',
                       legend_title='Estudiante')
     
