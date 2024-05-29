@@ -1,45 +1,29 @@
-
 import streamlit as st
-import matplotlib.pyplot as plt
 
 # Set the page title and header
-st.title("Proyecto Integrador")
-st.header("Bienvenido a nuestro Proyecto Integrador")
+st.title("Calculadora de Liquidación ")
+st.header("¡Bienvenido a nuestra Calculadora de Liquidación!")
 
-# Hero Section with image and project description
-st.image("https://i1.sndcdn.com/artworks-nTgGESMaN9t5TBxQ-xO5rFg-t500x500.jpg", width=600)
-st.write("**Descripción del proyecto:** Breve descripción del proyecto, sus objetivos y su impacto.")
+# Descripción de la aplicación
+st.image("https://yekoclub-partner-content.sfo3.digitaloceanspaces.com/partner/745.ba485ade-095b-435f-9fbf-16476f6cea7a.png", width=400)
+st.write("**Descripción de la aplicación:** Esta aplicación te permite calcular la liquidación laboral de un trabajador. Puedes ingresar la fecha de inicio y final del periodo laboral, el salario mensual, si el trabajador tiene derecho a auxilio de transporte y el porcentaje de riesgo laboral para obtener el valor de la liquidación.")
 
-# Project Overview
-st.subheader("Resumen del Proyecto")
-st.write("- Punto 1: Descripción detallada del punto 1 del proyecto.")
-st.write("- Punto 2: Descripción detallada del punto 2 del proyecto.")
-st.write("- Punto 3: Descripción detallada del punto 3 del proyecto.")
+# Resumen del Proyecto
+st.subheader("¿Qué es la Liquidación Laboral?")
+st.write("La liquidación laboral es el proceso mediante el cual se calcula el monto que un empleador debe pagar a un trabajador al finalizar su relación laboral. Este monto incluye el salario proporcional, auxilio de transporte si aplica, y otros conceptos según la legislación laboral.")
 
-# Features and Benefits
-st.subheader("Características y Beneficios")
-st.write("**Característica 1:** Descripción de la característica 1 y sus beneficios.")
-st.write("**Característica 2:** Descripción de la característica 2 y sus beneficios.")
-st.write("**Característica 3:** Descripción de la característica 3 y sus beneficios.")
+# Características y Beneficios
+st.subheader("Características y Beneficios de la Calculadora de Liquidación")
+st.write("**Cálculo Preciso:** Realiza el cálculo de la liquidación de forma rápida y precisa.")
+st.write("**Información Relevante:** Proporciona detalles sobre los componentes del cálculo, como el salario proporcional y el auxilio de transporte.")
+st.write("**Fácil de Usar:** Interfaz intuitiva que permite a los usuarios ingresar fácilmente los datos necesarios y obtener el resultado.")
 
-# Interactive Chart or Visualization (Optional)
-# Replace with your specific data and visualization
-data = [10, 20, 30, 40, 50]
-labels = ["Categoría A", "Categoría B", "Categoría C", "Categoría D", "Categoría E"]
-fig, ax = plt.subplots()
-ax.pie(data, labels=labels, autopct="%1.1f%%")
-st.pyplot(fig)
+# Llamado a la Acción
+st.subheader("¡Comienza a Calcular!")
+st.write("**Completa los Campos:** Ingresa la fecha de inicio y final del periodo laboral, el salario mensual, si el trabajador tiene derecho a auxilio de transporte y el porcentaje de riesgo laboral.")
+st.write("**Haz Clic en 'Calcular Liquidación':** Obtén el valor de la liquidación laboral de forma instantánea.")
 
-# Call to Action
-st.subheader("¡Toma Acción!")
-st.write("**Visite nuestro sitio web:** [Enlace al sitio web del proyecto](https://example.com)")
-st.write("**Contáctenos:** [Enlace al correo electrónico de contacto](mailto:info@example.com)")
-
-# Footer with team members and project information
-st.subheader("Equipo y Contacto")
-st.write("**Miembros del equipo:**")
-st.write("- Nombre 1: Cargo en el equipo.")
-st.write("- Nombre 2: Cargo en el equipo.")
-st.write("- Nombre 3: Cargo en el equipo.")
-st.write("**Información de contacto:**")
-st.write("Correo electrónico: [Enlace al correo electrónico de contacto](mailto:info@example.com)")
+# Equipo y Contacto
+st.subheader("¿Necesitas Ayuda?")
+st.write("**Contacta con Nosotros:** Si tienes alguna pregunta o necesitas asistencia, no dudes en ponerte en contacto con nuestro equipo.")
+st.write("Correo electrónico: [info@calculadoraliquidacion.com](mailto:info@calculadoraliquidacion.com)")
