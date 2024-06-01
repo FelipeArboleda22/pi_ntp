@@ -15,122 +15,79 @@ df.columns = [col.lower() for col in df.columns]
 
 # Listas de valores únicos para los selectboxes
 municipios_u = sorted(df['municipio'].unique())
-barrios_u = sorted(df['barrio'].unique())
 sectores_u = sorted(df['sector_económico'].unique())
 cargos_u = sorted(df['nombre_cargo'].unique())
 niveles_educativos_u = sorted(df['nivel_educativo'].unique())
 
 # -----------------------------------------------------------------------------------
-def filtro1():    
-    col1, col2 = st.columns(2)
-    with col1:
-        municipio = st.selectbox("Municipio", municipios_u) 
-    with col2:
-        sector = st.selectbox("Sector Económico", sectores_u)
+def filtro_municipio_sector():    
+    municipio = st.selectbox("Municipio", municipios_u)
+    sector = st.selectbox("Sector Económico", sectores_u)
+    
     resultado = df[(df['municipio'] == municipio) & (df['sector_económico'] == sector)]
-   
-    resultado = resultado.reset_index(drop=True) 
-    # Gráfico de barras
-    cargo = resultado['nombre_cargo']
-    fig = go.Figure(data=[
-        go.Bar(name='vacantes', x=cargo, y=resultado['numero_de_vacantes']),
-        go.Bar(name='salario', x=cargo, y=resultado['salario_honorarios'])
-    ])   
-    fig.update_layout(barmode='group')
-    st.plotly_chart(fig, use_container_width=True)
-    # Tabla
-    st.table(resultado[["nombre_cargo", "numero_de_vacantes", "salario_honorarios", "tipo_de_contrato", "duración_contrato_(meses)"]])
+    
+    if resultado.empty:
+        st.write("No se encontraron resultados para la combinación seleccionada.")
+    else:
+        # Gráfico de barras
+        fig = go.Figure(data=[
+            go.Bar(name='Vacantes', x=resultado['nombre_cargo'], y=resultado['numero_de_vacantes']),
+            go.Bar(name='Salario', x=resultado['nombre_cargo'], y=resultado['salario_honorarios'])
+        ])   
+        fig.update_layout(barmode='group', title='Vacantes y Salarios por Cargo')
+        st.plotly_chart(fig, use_container_width=True)
+        
+        # Tabla
+        st.table(resultado[['nombre_cargo', 'numero_de_vacantes', 'salario_honorarios']])
     
 # -----------------------------------------------------------------------------------
-def filtro2():
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        municipio = st.selectbox("Municipio", municipios_u)
-    with col2:
-        barrio = st.selectbox("Barrio", barrios_u)
-    with col3:
-        cargos_u.append("Todos")
-        cargo = st.selectbox("Cargo", cargos_u)   
+def filtro_municipio_cargo():
+    municipio = st.selectbox("Municipio", municipios_u)
+    cargo = st.selectbox("Cargo", ['Todos'] + cargos_u)
 
     if cargo == "Todos":
-        resultado = df[(df['municipio'] == municipio) & (df['barrio'] == barrio)]
+        resultado = df[df['municipio'] == municipio]
+    else:
+        resultado = df[(df['municipio'] == municipio) & (df['nombre_cargo'] == cargo)]
+    
+    if resultado.empty:
+        st.write("No se encontraron resultados para la combinación seleccionada.")
+    else:
         # Gráfico de barras
-        barrios = sorted(df['barrio'].unique())
         fig = go.Figure(data=[
-            go.Bar(name='vacantes', x=barrios, y=resultado['numero_de_vacantes']),
-            go.Bar(name='salario', x=barrios, y=resultado['salario_honorarios'])
+            go.Bar(name='Vacantes', x=resultado['nombre_cargo'], y=resultado['numero_de_vacantes']),
+            go.Bar(name='Salario', x=resultado['nombre_cargo'], y=resultado['salario_honorarios'])
         ])   
-        fig.update_layout(barmode='group')
+        fig.update_layout(barmode='group', title='Vacantes y Salarios por Cargo')
         st.plotly_chart(fig, use_container_width=True)
-
-        resultado = resultado.reset_index(drop=True) 
-        v1 = resultado.loc[0, ['numero_de_vacantes', 'salario_honorarios']]
-        v2 = resultado.loc[1, ['numero_de_vacantes', 'salario_honorarios']]
-        v3 = resultado.loc[2, ['numero_de_vacantes', 'salario_honorarios']]
-        tv = pd.Series([v1.mean(), v2.mean(), v3.mean()])       
-        st.subheader("Promedio")
-        st.subheader(round(tv.mean(), 1)) 
-    else:   
-        resultado = df[(df['municipio'] == municipio) & (df['barrio'] == barrio) & (df['nombre_cargo'] == cargo)]
-        # Gráfico de barras
-        barrio = resultado['barrio']
-        fig = go.Figure(data=[
-            go.Bar(name='vacantes', x=barrio, y=resultado['numero_de_vacantes']),
-            go.Bar(name='salario', x=barrio, y=resultado['salario_honorarios'])
-        ])   
-        fig.update_layout(barmode='group')
-        st.plotly_chart(fig, use_container_width=True)
-
-        resultado = resultado.reset_index(drop=True) 
-        vacantes_salario = resultado.loc[0, ['numero_de_vacantes', 'salario_honorarios']]
-        st.subheader("Promedio")
-        st.subheader(round(vacantes_salario.mean(), 1)) 
-  
+        
+        # Tabla
+        st.table(resultado[['nombre_cargo', 'numero_de_vacantes', 'salario_honorarios']])
+        
 # -----------------------------------------------------------------------------------
-def filtro3():
-    municipio = st.selectbox("Municipio", municipios_u)
-    municipio_data = df[df['municipio'] == municipio]
-    
-    # Gráfico de línea para mostrar las ofertas a lo largo del tiempo (si hay una variable de tiempo disponible)
-    fig = go.Figure()
-    for index, row in municipio_data.iterrows():
-        fig.add_trace(go.Scatter(x=barrios_u, y=[row['numero_de_vacantes'], row['salario_honorarios']],
-                                 mode='lines+markers',
-                                 name=row['barrio']))
-    
-    fig.update_layout(title=f"Ofertas de Empleo en {municipio} a lo largo del tiempo",
-                      xaxis_title='Barrio',
-                      yaxis_title='Datos',
-                      legend_title='Barrio')
-    
-    st.plotly_chart(fig, use_container_width=True)
-
-# -----------------------------------------------------------------------------------
-def filtro4():
+def filtro_nivel_educativo():
     nivel_educativo = st.selectbox("Nivel Educativo", niveles_educativos_u)
     resultado = df[df['nivel_educativo'] == nivel_educativo]
-
-    # Mostrar los datos filtrados por nivel educativo seleccionado.
-    st.write(resultado)
-
+    
+    if resultado.empty:
+        st.write("No se encontraron resultados para el nivel educativo seleccionado.")
+    else:
+        # Tabla
+        st.table(resultado[['nombre_cargo', 'numero_de_vacantes', 'salario_honorarios', 'municipio', 'sector_económico']])
+    
 # -----------------------------------------------------------------------------------
 filtros =[
     "Ofertas por Municipio y Sector",
-    "Ofertas por Municipio, Barrio y Cargo",
-    "Ofertas por Municipio a lo largo del tiempo",
+    "Ofertas por Municipio y Cargo",
     "Ofertas por Nivel Educativo"
 ]
 
 filtro = st.selectbox("Filtros", filtros)
 
 if filtro:
-    filtro_index = filtros.index(filtro)
-
-    if filtro_index == 0:
-        filtro1()
-    elif filtro_index == 1:
-        filtro2()
-    elif filtro_index == 2:
-        filtro3()
-    elif filtro_index == 3:
-        filtro4()
+    if filtro == "Ofertas por Municipio y Sector":
+        filtro_municipio_sector()
+    elif filtro == "Ofertas por Municipio y Cargo":
+        filtro_municipio_cargo()
+    elif filtro == "Ofertas por Nivel Educativo":
+        filtro_nivel_educativo()
